@@ -20,18 +20,13 @@ function init () {
     let idleAnimation = new Image();
     idleAnimation.src = `../../../img/${player.type}/${player.type}_idle.png`;
     idleAnimation.onload = (() => {
-        console.log(`loaded the image, ${idleAnimation.src}`);
         let actionData = loadAnimation('idle', player.type, 4);
-        console.log(`actionData is ${actionData}`);
-        drawAnimation(actionData);    
+        drawAnimation(actionData);
     });
 };
 
 window.addEventListener('keydown', (e) => {
     if (e.code === 'KeyW' || e.code === 'KeyA' || e.code === 'KeyS' || e.code === 'KeyD') {
-        // call Animation
-        // pass to animationView
-        // call function in Coordinates.js
-        // pass new coordinates to coordinatesView.js
+
     }
 });

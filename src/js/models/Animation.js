@@ -10,7 +10,6 @@ function loadAnimation (action, character, imgNumFrames) {
         actionData.push(counter);
         counter += frameWidth;
     }
-    console.log(`in loadanimation, actionData is ${actionData}`);
     return actionData;
 };
 
