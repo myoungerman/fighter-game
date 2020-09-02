@@ -2,31 +2,45 @@ import { Character, GameObject } from './models/Classes.js';
 import { loadAnimation } from './models/Animation.js';
 import { drawAnimation } from './views/animationView.js';
 
+let player = 0;
+
 init();
 
-function init () {
-    const canvas = document.getElementById('gameCanvas');
-    let player = new Character('woodcutter', 3, 0);
-
-    // Draw player sprite
-    const ctx = canvas.getContext("2d");
-    let playerImg = new Image();
-
-    playerImg.src = '../../img/woodcutter/Woodcutter_idle.png';
-    playerImg.onload = () => {
-        ctx.drawImage(playerImg, 0, 0, 48, 48, 0, 0, 48, 48);
-    }
-
-    let idleAnimation = new Image();
-    idleAnimation.src = `../../../img/${player.type}/${player.type}_idle.png`;
-    idleAnimation.onload = (() => {
-        let actionData = loadAnimation('idle', player.type, 4);
-        drawAnimation(actionData);
-    });
+function init() {
+    player = new Character('woodcutter', 3, 0);
+    //idlePlayer();
 };
 
-window.addEventListener('keydown', (e) => {
-    if (e.code === 'KeyW' || e.code === 'KeyA' || e.code === 'KeyS' || e.code === 'KeyD') {
+function idlePlayer() {
+        // Start the idle animation by default
+        let idleAnimation = new Image();
+        idleAnimation.src = `../../../img/${player.type}/${player.type}_idle.png`;
+        idleAnimation.onload = (() => {
+            let actionData = loadAnimation('idle', player, 4);
+            drawAnimation(actionData);
+        });
+}
 
+window.addEventListener('keydown', pressMoveKey);
+
+// the problem is that when the key is held, it processes multiple calls to load the walk animation.
+// while the key is held, only one walk animation should be processed the entire time
+function pressMoveKey(e) {
+    if (e.code === 'KeyA' || e.code === 'KeyD') {
+            let actionData = loadAnimation('walk', player, 6);
+            console.log(actionData);
+            if (actionData[3]) {
+                drawAnimation(actionData);
+                window.removeEventListener('keydown', pressMoveKey);
+                console.log('removed listener');
+            }
     }
-});
+}
+
+/* window.addEventListener('keyup', (e) => {
+    if (e.code === 'KeyA' || e.code === 'KeyD') {
+        let actionData = loadAnimation('idle', player, 4);
+        drawAnimation(actionData);
+    }
+}); */
+
