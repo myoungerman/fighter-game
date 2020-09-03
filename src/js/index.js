@@ -22,25 +22,31 @@ function idlePlayer() {
 }
 
 window.addEventListener('keydown', pressMoveKey);
+window.addEventListener('keyup', releaseMoveKey);
 
-// the problem is that when the key is held, it processes multiple calls to load the walk animation.
-// while the key is held, only one walk animation should be processed the entire time
+let addKeyUpListener = false;
+
 function pressMoveKey(e) {
-    if (e.code === 'KeyA' || e.code === 'KeyD') {
+    if (e.code === 'KeyA' || e.code === 'KeyD') { // Left and right movement keys
             let actionData = loadAnimation('walk', player, 6);
-            console.log(actionData);
-            if (actionData[3]) {
+            if (actionData[3]) { // If this index exists, the array has fully loaded
                 drawAnimation(actionData);
                 window.removeEventListener('keydown', pressMoveKey);
-                console.log('removed listener');
+                if (addKeyUpListener === true) { // Not needed the first time you press the move key
+                    window.addEventListener('keyup', releaseMoveKey);
+                }
             }
     }
 }
 
-/* window.addEventListener('keyup', (e) => {
+function releaseMoveKey(e) {
     if (e.code === 'KeyA' || e.code === 'KeyD') {
         let actionData = loadAnimation('idle', player, 4);
-        drawAnimation(actionData);
+        if (actionData[3]) {
+            drawAnimation(actionData);
+            window.removeEventListener('keyup', releaseMoveKey);
+            addKeyUpListener = true;
+            window.addEventListener('keydown', pressMoveKey);    
+        }
     }
-}); */
-
+}
