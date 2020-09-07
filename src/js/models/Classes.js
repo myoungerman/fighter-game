@@ -11,6 +11,8 @@ class Character extends GameObject {
         this.type = characterType;
         this.health = health;
         this.armor = armor;
+        this.facing = 'right';
+        this.currAction = 'idle';
     }
 }
 export { Character, GameObject };
