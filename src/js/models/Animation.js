@@ -1,6 +1,6 @@
 function loadAnimation(action, character, imgNumFrames) {
     let img = new Image();
-    if (action === 'idle') {
+    if (action === 'idle' || action.includes('attack')) {
         img.src = `../../../img/${character.type}/${character.type}_${action}.png`;
     } else {
         img.src = `../../../img/${character.type}/${character.type}_${action}_${character.facing}.png`;

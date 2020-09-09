@@ -4,11 +4,11 @@ const ctx = canvas.getContext("2d");
 let time = 0;
 let j = 2;
 let lastAnim = '';
-let lastX = 0;
+
+ctx.imageSmoothingEnabled = false;
 
 function drawAnimation (arr, playerObj) {
     let anim = new Image();
-
     anim.src = arr[0];
     let numFrames = arr.length - 2; // arr[0] and arr[1] aren't animation frames, so exclude them
 
@@ -25,7 +25,7 @@ function drawAnimation (arr, playerObj) {
         if (anim.src.includes('walk')) { 
             ctx.clearRect(playerObj.location[0] - 2.97, playerObj.location[1], arr[3], anim.height); // Erase the location where the player just walked   
         } else {
-            ctx.clearRect(playerObj.location[0], playerObj.location[1], arr[3], anim.height); // Erase the frame where the player is idling
+            ctx.clearRect(playerObj.location[0], playerObj.location[1], arr[3], anim.height); // Erase the frame where the player is currently idling
         }
         
         ctx.drawImage(anim, arr[j], 0, arr[3], arr[1], playerObj.location[0], playerObj.location[1], arr[3], arr[1]); // arr[j] is the x-coord of the current frame
