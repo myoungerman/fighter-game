@@ -8,6 +8,7 @@ let lastX = 0;
 
 function drawAnimation (arr, playerObj) {
     let anim = new Image();
+
     anim.src = arr[0];
     let numFrames = arr.length - 2; // arr[0] and arr[1] aren't animation frames, so exclude them
 
