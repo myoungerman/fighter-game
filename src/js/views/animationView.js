@@ -4,6 +4,7 @@ const ctx = canvas.getContext("2d");
 let time = 0;
 let j = 2;
 let lastAnim = '';
+let lastX = 0;
 
 function drawAnimation (arr, playerObj) {
     let anim = new Image();
@@ -20,11 +21,12 @@ function drawAnimation (arr, playerObj) {
     }
 
     if (Number.isInteger(time / 10)) { // Reduce the animation speed
-        if (anim.src.includes('walk')) {
-            ctx.clearRect(playerObj.location[0] - 0.33, playerObj.location[1], arr[3], anim.height);   
+        if (anim.src.includes('walk')) { 
+            ctx.clearRect(playerObj.location[0] - 2.97, playerObj.location[1], arr[3], anim.height); // Erase the location where the player just walked   
         } else {
-            ctx.clearRect(playerObj.location[0], playerObj.location[1], arr[3], anim.height);
+            ctx.clearRect(playerObj.location[0], playerObj.location[1], arr[3], anim.height); // Erase the frame where the player is idling
         }
+        
         ctx.drawImage(anim, arr[j], 0, arr[3], arr[1], playerObj.location[0], playerObj.location[1], arr[3], arr[1]); // arr[j] is the x-coord of the current frame
         if (j < numFrames) { // Increment if there are more frames in the animation
             j++;

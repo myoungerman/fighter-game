@@ -15,7 +15,7 @@ async function gameLoop() {
     let startTime = new Date();
     startTime = startTime.getTime();
 
-    if (playerAnimToPlay === playerAnimArr[1]) {
+    if (playerAnimToPlay === playerAnimArr[1]) { // If the player is walking, increase their x-axis location by 0.33 px, which is about 10 px/s.
         player.location[0] += 0.33;
     }
 
