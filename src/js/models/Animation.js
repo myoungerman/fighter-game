@@ -1,6 +1,6 @@
 function loadAnimation(action, character, imgNumFrames) {
     let img = new Image();
-    if (action === 'idle') {
+    if (action === 'idle' || action.includes('attack')) {
         img.src = `../../../img/${character.type}/${character.type}_${action}.png`;
     } else {
         img.src = `../../../img/${character.type}/${character.type}_${action}_${character.facing}.png`;
@@ -17,20 +17,4 @@ function loadAnimation(action, character, imgNumFrames) {
     return actionData;
 };
 
-function selectAnimation(playerCurrAction) {
-    let action = '';
-
-    switch(playerCurrAction) {
-        case 'walk':
-            action = 'playerWalkAnim';
-            break;
-        case 'idle':
-            action = 'playerIdleAnim';
-            break;
-        default:
-            action = 'playerIdleAnim';
-    }
-    return action;
-}
-
-export { loadAnimation, selectAnimation };
+export { loadAnimation };
