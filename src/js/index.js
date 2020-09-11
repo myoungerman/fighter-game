@@ -1,6 +1,7 @@
 import { Character, GameObject } from './models/Classes.js';
 import { loadAnimation } from './models/Animation.js';
 import { drawAnimation } from './views/animationView.js';
+import { createBackground } from './views/gameStateView.js';
 
 let player = new Character('woodcutter', 3, 0, 0, 50);
 let playerIdleAnim = loadAnimation('idle', player, 4);
@@ -11,6 +12,7 @@ let playerAnimToPlay = playerAnimArr[0];
 let counter = 0;
 const msPerFrame = 33.33; // 33.33 ms per frame is 30 FPS. 1000 ms / FPS = ms per frame.
 
+createBackground();
 requestAnimationFrame(gameLoop);
 
 async function gameLoop() {
