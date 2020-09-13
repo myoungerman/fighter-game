@@ -11,7 +11,7 @@ function drawAnimation (arr, playerObj) {
     let anim = new Image();
     anim.src = arr[0];
     let numFrames = arr.length - 2; // arr[0] and arr[1] aren't animation frames, so exclude them
-console.log(arr[0]);
+
     if (lastAnim === '') { // No previous animation
         lastAnim = arr[0];
     } else if (lastAnim !== arr[0]) { // New animation, so reset the time and the current frame, update lastAnim to the new image

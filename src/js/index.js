@@ -1,7 +1,8 @@
 import { Character, GameObject } from './models/Classes.js';
 import { loadAnimation } from './models/Animation.js';
+import { loadMap } from './models/GameState.js';
 import { drawAnimation } from './views/animationView.js';
-import { createBackground } from './views/gameStateView.js';
+import { drawBackground, drawMap } from './views/gameStateView.js';
 
 let player = new Character('woodcutter', 3, 0, 0, 50);
 let playerIdleAnim = loadAnimation('idle', player, 4);
@@ -10,9 +11,11 @@ let playerAttack1Anim = loadAnimation('attack1', player, 6);
 let playerAnimArr = [playerIdleAnim, playerWalkAnim, playerAttack1Anim];
 let playerAnimToPlay = playerAnimArr[0];
 let counter = 0;
-const msPerFrame = 33.33; // 33.33 ms per frame is 30 FPS. 1000 ms / FPS = ms per frame.
+const MsPerFrame = 33.33; // 33.33 ms per frame is 30 FPS. 1000 ms / FPS = ms per frame.
 
-createBackground();
+//drawBackground();
+let map = loadMap();
+drawMap(map);
 requestAnimationFrame(gameLoop);
 
 async function gameLoop() {
@@ -37,7 +40,7 @@ async function gameLoop() {
 }
 
 function compareTimes(startTime) {
-    const iterationDuration = (startTime + msPerFrame); // The time in ms when we should reiterate gameLoop.
+    const iterationDuration = (startTime + MsPerFrame); // The time in ms when we should reiterate gameLoop.
     let currTime = new Date();
     currTime = currTime.getTime();
 
