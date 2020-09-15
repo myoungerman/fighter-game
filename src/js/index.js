@@ -13,7 +13,7 @@ let playerAnimToPlay = playerAnimArr[0];
 let counter = 0;
 const MsPerFrame = 33.33; // 33.33 ms per frame is 30 FPS. 1000 ms / FPS = ms per frame.
 
-//drawBackground();
+drawBackground();
 let map = loadMap();
 drawMap(map);
 requestAnimationFrame(gameLoop);
