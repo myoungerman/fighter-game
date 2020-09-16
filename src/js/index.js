@@ -4,7 +4,7 @@ import { loadMap } from './models/GameState.js';
 import { drawAnimation } from './views/animationView.js';
 import { drawBackground, drawMap } from './views/gameStateView.js';
 
-let player = new Character('woodcutter', 3, 0, 0, 50);
+let player = new Character('woodcutter', 3, 0, 150, 90);
 let playerIdleAnim = loadAnimation('idle', player, 4);
 let playerWalkAnim = loadAnimation('walk', player, 6);
 let playerAttack1Anim = loadAnimation('attack1', player, 6);

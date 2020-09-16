@@ -1,14 +1,15 @@
 export { drawBackground, drawMap };
 
 const background = document.getElementById('background');
-const canvas = document.getElementById('gameCanvas');
+//const canvas = document.getElementById('gameCanvas');
+const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext("2d");
 
 function drawBackground() {
     let swampBackground = new Image();
     swampBackground.src = "../../../img/map/background/background.png";
     background.src = swampBackground.src;
-    background.style.zIndex = -1;
+    //background.style.zIndex = -2;
     background.style.position = 'absolute';
 }
 
