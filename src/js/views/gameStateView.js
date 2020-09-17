@@ -5,6 +5,8 @@ const background = document.getElementById('background');
 const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext("2d");
 
+ctx.imageSmoothingEnabled = false;
+
 function drawBackground() {
     let swampBackground = new Image();
     swampBackground.src = "../../../img/map/background/background.png";
