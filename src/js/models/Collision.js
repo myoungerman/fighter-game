@@ -27,22 +27,6 @@ empty, the player falls offscreen and dies.
 
 //
 
-function detectTileLocation(mapObj) {
-    // 180 tiles, 576 px wide and 320 px high
-    let columns = mapObj.columns;
-    let rows = mapObj.rows;
-    let tSize = mapObj.tSize;
-
-    // immediately after the map is drawn, detect all tile locations
-    /*
-    starting with the first tile, iterate over the tiles in order, creating
-    a new tile object for each tile. The object will contain an x and a
-    y coordinate as well as a canCollide boolean that will be true for
-    tiles that are solid, but false for tiles that are empty. The x coord
-    should increase by tSize every tile, and the y coord should increase by
-    tSize every n tiles, where n is columns.
-    */
-}
 
 function detectCollision() {
     // in game loop, look for collision

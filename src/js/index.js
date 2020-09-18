@@ -3,6 +3,7 @@ import { loadAnimation } from './models/Animation.js';
 import { loadMap } from './models/GameState.js';
 import { drawAnimation } from './views/animationView.js';
 import { drawBackground, drawMap } from './views/gameStateView.js';
+import { detectTileLocation } from './models/Coordinates.js';
 
 let player = new Character('woodcutter', 3, 0, 150, 90);
 let playerIdleAnim = loadAnimation('idle', player, 4);
@@ -15,8 +16,9 @@ const MsPerFrame = 33.33; // 33.33 ms per frame is 30 FPS. 1000 ms / FPS = ms pe
 
 drawBackground();
 let map = loadMap();
+let tileLocations = detectTileLocation(map);
+console.log(tileLocations);
 drawMap(map);
-// detect tile locations here
 requestAnimationFrame(gameLoop);
 
 async function gameLoop() {
