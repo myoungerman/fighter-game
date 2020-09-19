@@ -17,7 +17,6 @@ const MsPerFrame = 33.33; // 33.33 ms per frame is 30 FPS. 1000 ms / FPS = ms pe
 drawBackground();
 let map = loadMap();
 let tileLocations = detectTileLocation(map);
-console.log(tileLocations);
 drawMap(map);
 requestAnimationFrame(gameLoop);
 

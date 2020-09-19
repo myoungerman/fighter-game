@@ -14,8 +14,8 @@ function detectTileLocation(map) {
         } else {
             tileObj = new GameObject(false, false);
         }
-        tileObj.initialX = tile.sourceX;
-        tileObj.initialY = tile.sourceY;
+        tileObj.initialX = c * map.tsize; // target x
+        tileObj.initialY = r * map.tsize; // target y
         tileArr.push(tileObj);
         }
       }   
