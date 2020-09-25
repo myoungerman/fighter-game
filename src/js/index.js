@@ -4,8 +4,11 @@ import { loadMap } from './models/GameState.js';
 import { drawAnimation } from './views/animationView.js';
 import { drawBackground, drawMap } from './views/gameStateView.js';
 import { detectTileLocation } from './models/Coordinates.js';
+import { detectCollision } from './models/Collision.js';
 
-let player = new Character('woodcutter', 3, 0, 150, 90);
+let player = new Character('woodcutter', 3, 0, 120, 90);
+player.width = 30;
+player.height = 48;
 let playerIdleAnim = loadAnimation('idle', player, 4);
 let playerWalkAnim = loadAnimation('walk', player, 6);
 let playerAttack1Anim = loadAnimation('attack1', player, 6);
@@ -16,7 +19,7 @@ const MsPerFrame = 33.33; // 33.33 ms per frame is 30 FPS. 1000 ms / FPS = ms pe
 
 drawBackground();
 let map = loadMap();
-let tileLocations = detectTileLocation(map);
+let tileArr = detectTileLocation(map);
 drawMap(map);
 requestAnimationFrame(gameLoop);
 
@@ -26,6 +29,7 @@ async function gameLoop() {
 
     if (playerAnimToPlay === playerAnimArr[1]) { // If the player is walking, increase their x-axis location by 0.33 px, which is about 10 px/s.
         player.location[0] += 0.33;
+        detectCollision(player, tileArr.fullTiles); // pass filled tiles array to this function
     }
 
     if (playerAnimToPlay === playerAnimArr[2]) {
@@ -64,7 +68,7 @@ let addKeyUpListener = false;
 function pressMoveKey(e) {
     if (e.code === 'KeyA' || e.code === 'KeyD') {
         window.removeEventListener('keydown', pressMoveKey); // Register only one keypress event at a time
-        playerAnimToPlay = playerAnimArr[1];
+        playerAnimToPlay = playerAnimArr[1]; // walk
         if (addKeyUpListener === true) {
             window.addEventListener('keyup', releaseMoveKey);
         }
@@ -73,14 +77,14 @@ function pressMoveKey(e) {
 
 function pressAttackKey(e) {
     if (e.code === 'KeyF' && (!e.repeat)) {
-        playerAnimToPlay = playerAnimArr[2];
+        playerAnimToPlay = playerAnimArr[2]; // attack
     }
 }
 
 function releaseMoveKey(e) {
     if (e.code === 'KeyA' || e.code === 'KeyD') {
         window.removeEventListener('keyup', pressMoveKey);
-        playerAnimToPlay = playerAnimArr[0];
+        playerAnimToPlay = playerAnimArr[0]; // idle
         addKeyUpListener = true;
         window.addEventListener('keydown', pressMoveKey);
     }
