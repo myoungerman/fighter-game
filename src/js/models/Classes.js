@@ -1,7 +1,11 @@
 class GameObject {
-    constructor (canCollide, canMove) {
+    constructor (canCollide, canMove, width, height) {
         this.canCollide = canCollide;
         this.canMove = canMove;
+        this.initialX = 0;
+        this.initialY = 0;
+        this.width = width;
+        this.height = height;
     }
 }
 

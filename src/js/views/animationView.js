@@ -29,6 +29,8 @@ function drawAnimation (arr, playerObj) {
         }
         
         ctx.drawImage(anim, arr[j], 0, arr[3], arr[1], playerObj.location[0], playerObj.location[1], arr[3], arr[1]); // arr[j] is the x-coord of the current frame
+        ctx.strokeStyle = 'red';
+        ctx.strokeRect(playerObj.location[0], playerObj.location[1], 30, arr[1]);
         if (j < numFrames) { // Increment if there are more frames in the animation
             j++;
         } else { // Reset the animation
