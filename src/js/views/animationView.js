@@ -21,16 +21,21 @@ function drawAnimation (arr, playerObj) {
     } else { // Same animation as last time
     }
 
-    if (Number.isInteger(time / 10)) { // Reduce the animation speed
-        if (anim.src.includes('walk')) { 
-            ctx.clearRect(playerObj.location[0] - 2.97, playerObj.location[1], arr[3], anim.height); // Erase the location where the player just walked   
+    let animSpeed = 10;
+    if (anim.src.includes('walk')) {
+        animSpeed = 20;
+    }
+
+    if (Number.isInteger(time / animSpeed)) { // Reduce the animation speed
+        if (anim.src.includes('walk') || anim.src.includes('run')) { 
+            ctx.clearRect(playerObj.location[0] - 6.6, playerObj.location[1], arr[3], anim.height); // Erase  where the player just walked           
+        } else if (anim.src.includes('jump')) {
+            ctx.clearRect(playerObj.location[0] - 19.3, playerObj.location[1], arr[3], anim.height); // 19.3 is the result of 1.93 px movement per gameLoop * 10 (how often a new frame is drawn)  
         } else {
             ctx.clearRect(playerObj.location[0], playerObj.location[1], arr[3], anim.height); // Erase the frame where the player is currently idling
         }
         
         ctx.drawImage(anim, arr[j], 0, arr[3], arr[1], playerObj.location[0], playerObj.location[1], arr[3], arr[1]); // arr[j] is the x-coord of the current frame
-        ctx.strokeStyle = 'red';
-        ctx.strokeRect(playerObj.location[0], playerObj.location[1], 30, arr[1]);
         if (j < numFrames) { // Increment if there are more frames in the animation
             j++;
         } else { // Reset the animation

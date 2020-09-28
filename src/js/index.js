@@ -6,13 +6,26 @@ import { drawBackground, drawMap } from './views/gameStateView.js';
 import { detectTileLocation } from './models/Coordinates.js';
 import { detectCollision } from './models/Collision.js';
 
-let player = new Character('woodcutter', 3, 0, 120, 90);
+let player = new Character('woodcutter', 3, 0, 16, 240);
 player.width = 30;
 player.height = 48;
-let playerIdleAnim = loadAnimation('idle', player, 4);
-let playerWalkAnim = loadAnimation('walk', player, 6);
-let playerAttack1Anim = loadAnimation('attack1', player, 6);
-let playerAnimArr = [playerIdleAnim, playerWalkAnim, playerAttack1Anim];
+
+let playerIdleAnim = [];
+let playerWalkAnim = [];
+let playerAttack1Anim = [];
+let playerJumpAnim = [];
+let keysPressed = [];
+
+init();
+
+function init() {
+    playerIdleAnim = loadAnimation('idle', player, 4);
+    playerWalkAnim = loadAnimation('run', player, 6);
+    playerAttack1Anim = loadAnimation('attack1', player, 6);
+    playerJumpAnim = loadAnimation('jump', player, 6);
+}
+
+let playerAnimArr = [playerIdleAnim, playerWalkAnim, playerAttack1Anim, playerJumpAnim];
 let playerAnimToPlay = playerAnimArr[0];
 let counter = 0;
 const MsPerFrame = 33.33; // 33.33 ms per frame is 30 FPS. 1000 ms / FPS = ms per frame.
@@ -27,19 +40,30 @@ async function gameLoop() {
     let startTime = new Date();
     startTime = startTime.getTime();
 
-    if (playerAnimToPlay === playerAnimArr[1]) { // If the player is walking, increase their x-axis location by 0.33 px, which is about 10 px/s.
-        player.location[0] += 0.33;
-        detectCollision(player, tileArr.fullTiles); // pass filled tiles array to this function
-    }
-
-    if (playerAnimToPlay === playerAnimArr[2]) {
+    if (playerAnimToPlay === playerAnimArr[2] || playerAnimToPlay === playerAnimArr[3]) { // Player is attacking or jumping
         counter++;
-        if (counter > 60) { // After the full attack animation plays, revert to idle
+        if (counter > 60) { // After the entire animation plays, revert to idle
             playerAnimToPlay = playerAnimArr[0];
             player.currAction = 'idle';
             counter = 0;
         }
     }
+
+    if (playerAnimToPlay === playerAnimArr[1] || playerAnimToPlay === playerAnimArr[3]) { // Player is walking or jumping
+        let collision = detectCollision(player, tileArr.fullTiles);
+        if (collision !== true) {
+            if (playerAnimToPlay === playerAnimArr[1]) {
+                player.location[0] += 0.66;
+            }
+            if (playerAnimToPlay === playerAnimArr[3]) {
+                // if spacebar and move key were pressed
+                if (counter < 50) {
+                    player.location[0] += 1.93; // Player can jump over gaps 3 tiles wide
+                }
+            }
+        }
+    }
+
     drawAnimation(playerAnimToPlay, player);
     let iterateLoop = await compareTimes(startTime); // Wait to repeat gameLoop until 33.33 ms have passed since this cycle of gameLoop began.
     requestAnimationFrame(gameLoop);
@@ -61,14 +85,16 @@ function compareTimes(startTime) {
 
 window.addEventListener('keydown', pressAttackKey);
 window.addEventListener('keydown', pressMoveKey);
+window.addEventListener('keydown', pressJumpKey);
 window.addEventListener('keyup', releaseMoveKey);
+
 
 let addKeyUpListener = false;
 
 function pressMoveKey(e) {
-    if (e.code === 'KeyA' || e.code === 'KeyD') {
+    if (e.code === 'KeyD' && e.code !== 'Space') {
         window.removeEventListener('keydown', pressMoveKey); // Register only one keypress event at a time
-        playerAnimToPlay = playerAnimArr[1]; // walk
+        playerAnimToPlay = playerAnimArr[1]; // Walk
         if (addKeyUpListener === true) {
             window.addEventListener('keyup', releaseMoveKey);
         }
@@ -77,15 +103,23 @@ function pressMoveKey(e) {
 
 function pressAttackKey(e) {
     if (e.code === 'KeyF' && (!e.repeat)) {
-        playerAnimToPlay = playerAnimArr[2]; // attack
+        playerAnimToPlay = playerAnimArr[2]; // Attack
     }
 }
 
 function releaseMoveKey(e) {
-    if (e.code === 'KeyA' || e.code === 'KeyD') {
+    if (e.code === 'KeyD' && e.code !== 'Space') {
         window.removeEventListener('keyup', pressMoveKey);
-        playerAnimToPlay = playerAnimArr[0]; // idle
+        playerAnimToPlay = playerAnimArr[0]; // Idle
         addKeyUpListener = true;
         window.addEventListener('keydown', pressMoveKey);
+    }
+}
+
+function pressJumpKey(e) {
+    // TO DO: If the last two keys pressed were Space and KeyD, jump!
+    if ((e.code === 'Space' && e.code === 'KeyD') || e.code === 'Space') {
+        playerAnimToPlay = playerAnimArr[3];
+        //keyPressed = e.code;
     }
 }
