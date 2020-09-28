@@ -10,26 +10,22 @@ let player = new Character('woodcutter', 3, 0, 16, 240);
 player.width = 30;
 player.height = 48;
 
-let playerIdleAnim;
-let playerWalkAnim;
-let playerAttack1Anim;
-let playerJumpAnim;
+let playerIdleAnim = [];
+let playerWalkAnim = [];
+let playerAttack1Anim = [];
+let playerJumpAnim = [];
+let keysPressed = [];
 
+init();
 
-init_AW();
-
-async function init_AW() {
-    playerIdleAnim = await loadAnimation('idle', player, 4);
-    playerWalkAnim = await loadAnimation('run', player, 6);
-    playerAttack1Anim = await loadAnimation('attack1', player, 6);
-    playerJumpAnim = await loadAnimation('jump', player, 6);  
+function init() {
+    playerIdleAnim = loadAnimation('idle', player, 4);
+    playerWalkAnim = loadAnimation('run', player, 6);
+    playerAttack1Anim = loadAnimation('attack1', player, 6);
+    playerJumpAnim = loadAnimation('jump', player, 6);
 }
 
-/* let playerIdleAnim = loadAnimation('idle', player, 4);
-let playerWalkAnim = loadAnimation('run', player, 6);
-let playerAttack1Anim = loadAnimation('attack1', player, 6);
-let playerJumpAnim = loadAnimation('jump', player, 6);
- */let playerAnimArr = [playerIdleAnim, playerWalkAnim, playerAttack1Anim, playerJumpAnim];
+let playerAnimArr = [playerIdleAnim, playerWalkAnim, playerAttack1Anim, playerJumpAnim];
 let playerAnimToPlay = playerAnimArr[0];
 let counter = 0;
 const MsPerFrame = 33.33; // 33.33 ms per frame is 30 FPS. 1000 ms / FPS = ms per frame.
@@ -44,20 +40,6 @@ async function gameLoop() {
     let startTime = new Date();
     startTime = startTime.getTime();
 
-    if (playerAnimToPlay === playerAnimArr[1] || playerAnimToPlay === playerAnimArr[3]) { // Player is walking or jumping
-        let collision = detectCollision(player, tileArr.fullTiles);
-        if (collision !== true) {
-            if (playerAnimToPlay === playerAnimArr[1]) {
-                player.location[0] += 0.66; // Increase player's x-coord by about 20 px/s
-            }
-            if (playerAnimToPlay === playerAnimArr[3]) {
-                player.location[0] += 1.93; // Increase player's x-coord by about 20 px/s
-            }
-        }
-    }
-
-    // player needs to move 96 pixels while jumping if keyD and space are both pressed
-
     if (playerAnimToPlay === playerAnimArr[2] || playerAnimToPlay === playerAnimArr[3]) { // Player is attacking or jumping
         counter++;
         if (counter > 60) { // After the entire animation plays, revert to idle
@@ -66,6 +48,22 @@ async function gameLoop() {
             counter = 0;
         }
     }
+
+    if (playerAnimToPlay === playerAnimArr[1] || playerAnimToPlay === playerAnimArr[3]) { // Player is walking or jumping
+        let collision = detectCollision(player, tileArr.fullTiles);
+        if (collision !== true) {
+            if (playerAnimToPlay === playerAnimArr[1]) {
+                player.location[0] += 0.66;
+            }
+            if (playerAnimToPlay === playerAnimArr[3]) {
+                // if spacebar and move key were pressed
+                if (counter < 50) {
+                    player.location[0] += 1.93; // Player can jump over gaps 3 tiles wide
+                }
+            }
+        }
+    }
+
     drawAnimation(playerAnimToPlay, player);
     let iterateLoop = await compareTimes(startTime); // Wait to repeat gameLoop until 33.33 ms have passed since this cycle of gameLoop began.
     requestAnimationFrame(gameLoop);
@@ -119,7 +117,9 @@ function releaseMoveKey(e) {
 }
 
 function pressJumpKey(e) {
+    // TO DO: If the last two keys pressed were Space and KeyD, jump!
     if ((e.code === 'Space' && e.code === 'KeyD') || e.code === 'Space') {
         playerAnimToPlay = playerAnimArr[3];
+        //keyPressed = e.code;
     }
 }

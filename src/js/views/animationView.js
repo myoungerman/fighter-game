@@ -27,8 +27,10 @@ function drawAnimation (arr, playerObj) {
     }
 
     if (Number.isInteger(time / animSpeed)) { // Reduce the animation speed
-        if (anim.src.includes('walk')) { 
-            ctx.clearRect(playerObj.location[0] - 2.97, playerObj.location[1], arr[3], anim.height); // Erase the location where the player just walked   
+        if (anim.src.includes('walk') || anim.src.includes('run')) { 
+            ctx.clearRect(playerObj.location[0] - 6.6, playerObj.location[1], arr[3], anim.height); // Erase  where the player just walked           
+        } else if (anim.src.includes('jump')) {
+            ctx.clearRect(playerObj.location[0] - 19.3, playerObj.location[1], arr[3], anim.height); // 19.3 is the result of 1.93 px movement per gameLoop * 10 (how often a new frame is drawn)  
         } else {
             ctx.clearRect(playerObj.location[0], playerObj.location[1], arr[3], anim.height); // Erase the frame where the player is currently idling
         }
