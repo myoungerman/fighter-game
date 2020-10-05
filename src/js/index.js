@@ -1,8 +1,8 @@
 import { Character, GameObject } from './models/Classes.js';
 import { loadAnimation } from './models/Animation.js';
-import { loadMap } from './models/GameState.js';
+import { loadMap, loadBackgroundObjs } from './models/GameState.js';
 import { drawAnimation } from './views/animationView.js';
-import { drawBackground, drawMap } from './views/gameStateView.js';
+import { drawBackground, drawMap, drawBackgroundObjs } from './views/gameStateView.js';
 import { detectTileLocation } from './models/Coordinates.js';
 import { detectCollision } from './models/Collision.js';
 
@@ -34,6 +34,8 @@ drawBackground();
 let map = loadMap();
 let tileArr = detectTileLocation(map);
 drawMap(map);
+let scenery = loadBackgroundObjs();
+drawBackgroundObjs(scenery);
 requestAnimationFrame(gameLoop);
 
 async function gameLoop() {
