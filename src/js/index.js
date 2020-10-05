@@ -1,8 +1,8 @@
 import { Character, GameObject } from './models/Classes.js';
 import { loadAnimation } from './models/Animation.js';
-import { loadMap } from './models/GameState.js';
+import { loadMap, loadBackgroundObjs } from './models/GameState.js';
 import { drawAnimation } from './views/animationView.js';
-import { drawBackground, drawMap } from './views/gameStateView.js';
+import { drawBackground, drawMap, drawBackgroundObjs } from './views/gameStateView.js';
 import { detectTileLocation } from './models/Coordinates.js';
 import { detectCollision } from './models/Collision.js';
 
@@ -11,7 +11,7 @@ player.width = 30;
 player.height = 48;
 
 let playerIdleAnim = [];
-let playerWalkAnim = [];
+let playerRunAnim = [];
 let playerAttack1Anim = [];
 let playerJumpAnim = [];
 let keysPressed = [];
@@ -20,12 +20,12 @@ init();
 
 function init() {
     playerIdleAnim = loadAnimation('idle', player, 4);
-    playerWalkAnim = loadAnimation('run', player, 6);
+    playerRunAnim = loadAnimation('run', player, 6);
     playerAttack1Anim = loadAnimation('attack1', player, 6);
     playerJumpAnim = loadAnimation('jump', player, 6);
 }
 
-let playerAnimArr = [playerIdleAnim, playerWalkAnim, playerAttack1Anim, playerJumpAnim];
+let playerAnimArr = [playerIdleAnim, playerRunAnim, playerAttack1Anim, playerJumpAnim];
 let playerAnimToPlay = playerAnimArr[0];
 let counter = 0;
 const MsPerFrame = 33.33; // 33.33 ms per frame is 30 FPS. 1000 ms / FPS = ms per frame.
@@ -34,6 +34,8 @@ drawBackground();
 let map = loadMap();
 let tileArr = detectTileLocation(map);
 drawMap(map);
+let scenery = loadBackgroundObjs();
+drawBackgroundObjs(scenery);
 requestAnimationFrame(gameLoop);
 
 async function gameLoop() {
@@ -42,7 +44,7 @@ async function gameLoop() {
 
     if (playerAnimToPlay === playerAnimArr[2] || playerAnimToPlay === playerAnimArr[3]) { // Player is attacking or jumping
         counter++;
-        if (counter > 60) { // After the entire animation plays, revert to idle
+        if (counter > 30) { // After the entire animation plays, revert to idle
             playerAnimToPlay = playerAnimArr[0];
             player.currAction = 'idle';
             counter = 0;
@@ -56,9 +58,8 @@ async function gameLoop() {
                 player.location[0] += 0.66;
             }
             if (playerAnimToPlay === playerAnimArr[3]) {
-                // if spacebar and move key were pressed
-                if (counter < 50) {
-                    player.location[0] += 1.93; // Player can jump over gaps 3 tiles wide
+                if (counter < 24) { // The frame after this is the landing frame of the jump
+                    player.location[0] += 3.86; // Player can jump over gaps 3 tiles wide
                 }
             }
         }
@@ -93,7 +94,7 @@ let addKeyUpListener = false;
 
 function pressMoveKey(e) {
     if (e.code === 'KeyD' && e.code !== 'Space') {
-        window.removeEventListener('keydown', pressMoveKey); // Register only one keypress event at a time
+        window.removeEventListener('keydown', pressMoveKey); // Register only one keydown event at a time
         playerAnimToPlay = playerAnimArr[1]; // Walk
         if (addKeyUpListener === true) {
             window.addEventListener('keyup', releaseMoveKey);
@@ -117,7 +118,6 @@ function releaseMoveKey(e) {
 }
 
 function pressJumpKey(e) {
-    // TO DO: If the last two keys pressed were Space and KeyD, jump!
     if ((e.code === 'Space' && e.code === 'KeyD') || e.code === 'Space') {
         playerAnimToPlay = playerAnimArr[3];
         //keyPressed = e.code;

@@ -21,16 +21,17 @@ function drawAnimation (arr, playerObj) {
     } else { // Same animation as last time
     }
 
-    let animSpeed = 10;
-    if (anim.src.includes('walk')) {
-        animSpeed = 20;
+    let animSpeed = 5;
+
+    if (anim.src.includes('idle')) {
+        animSpeed = 8;
     }
 
     if (Number.isInteger(time / animSpeed)) { // Reduce the animation speed
-        if (anim.src.includes('walk') || anim.src.includes('run')) { 
+        if (anim.src.includes('run')) { 
             ctx.clearRect(playerObj.location[0] - 6.6, playerObj.location[1], arr[3], anim.height); // Erase  where the player just walked           
         } else if (anim.src.includes('jump')) {
-            ctx.clearRect(playerObj.location[0] - 19.3, playerObj.location[1], arr[3], anim.height); // 19.3 is the result of 1.93 px movement per gameLoop * 10 (how often a new frame is drawn)  
+            ctx.clearRect(playerObj.location[0] - 19.3, playerObj.location[1], arr[3], anim.height); // 19.3 is the result of 3.86 px movement per gameLoop * 5 (how often a new frame is drawn)  
         } else {
             ctx.clearRect(playerObj.location[0], playerObj.location[1], arr[3], anim.height); // Erase the frame where the player is currently idling
         }

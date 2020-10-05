@@ -1,7 +1,6 @@
-export { drawBackground, drawMap };
+export { drawBackground, drawMap, drawBackgroundObjs };
 
 const background = document.getElementById('background');
-//const canvas = document.getElementById('gameCanvas');
 const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext("2d");
 
@@ -40,4 +39,27 @@ function drawMap(map) {
             }
           }    
     });
+}
+
+function drawBackgroundObjs(objArr) {
+  // Each el of objArr is something like: ['../../../img/map/objects/boxes/', 2, [1, 4], [32, 132, 224, 228]]
+  // img path, amount of this object on the map, images used from that folder, x and y coordinates
+  objArr.forEach((el) => {
+    let xIndex = 0;
+    let yIndex = 1;
+    // for the length of [1], draw using [3] for img srcs and [4] for the coordinates
+    for (let i = 0; i < el[1]; i++) {
+      let img = new Image();
+      img.src = `${el[0]}${el[2][i]}.png`;
+      img.addEventListener('load', () => {
+        ctx.drawImage(
+          img,
+          el[3][xIndex],
+          el[3][yIndex]
+        );
+        xIndex += 2;
+        yIndex += 2;  
+      });
+    }
+  });
 }

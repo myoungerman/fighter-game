@@ -1,4 +1,4 @@
-export { loadMap };
+export { loadMap, loadBackgroundObjs };
 
 function loadMap() {
     let map = {
@@ -63,4 +63,25 @@ function loadMap() {
         }
     }
     return map;
+}
+
+function loadBackgroundObjs() {
+    // decide what background objects should exist on the map. Create an array of these items
+    // Create an object with 4 properties (folder name, item name, x, y)
+    // push each item to an array that we will pass to the draw function
+
+    let boxes = ['../../../img/map/objects/boxes/', 2, [1, 4], [32, 132, 224, 228]]; // img path, amount of this object on the map, images used from that folder, x and y coordinates
+    let bushes = [, [], []];
+    let fence = [, [], []];
+    let grass = [, [], []];
+    let ladders = ['../../../img/map/objects/ladders/', 3, [1, 2, 3], [64, 228, 64, 260, 64, 292]];
+    let logs = [, [], []];
+    let pointers = [, [], []];
+    let stones = [, [], []];
+    let trees = [, [], []];
+    let willows = [, [], []];
+
+    let backgroundObjArr = [boxes, ladders];
+
+    return backgroundObjArr;
 }
