@@ -31,11 +31,11 @@ let counter = 0;
 const MsPerFrame = 33.33; // 33.33 ms per frame is 30 FPS. 1000 ms / FPS = ms per frame.
 
 drawBackground();
+let scenery = loadBackgroundObjs();
+drawBackgroundObjs(scenery);
 let map = loadMap();
 let tileArr = detectTileLocation(map);
 drawMap(map);
-let scenery = loadBackgroundObjs();
-drawBackgroundObjs(scenery);
 requestAnimationFrame(gameLoop);
 
 async function gameLoop() {

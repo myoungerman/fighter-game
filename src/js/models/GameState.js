@@ -70,18 +70,18 @@ function loadBackgroundObjs() {
     // Create an object with 4 properties (folder name, item name, x, y)
     // push each item to an array that we will pass to the draw function
 
-    let boxes = ['../../../img/map/objects/boxes/', 2, [1, 4], [32, 132, 224, 228]]; // img path, amount of this object on the map, images used from that folder, x and y coordinates
+    let boxes = ['../../../img/map/objects/boxes/', 2, [1, 4], [32, 133, 224, 262]]; // img path, amount of this object on the map, images used from that folder, x and y coordinates
     let bushes = [, [], []];
     let fence = [, [], []];
     let grass = [, [], []];
-    let ladders = ['../../../img/map/objects/ladders/', 3, [1, 2, 3], [64, 228, 64, 260, 64, 292]];
-    let logs = [, [], []];
-    let pointers = [, [], []];
-    let stones = [, [], []];
-    let trees = [, [], []];
-    let willows = [, [], []];
+    let ladders = ['../../../img/map/objects/ladders/', 3, [3, 2, 1], [64, 196, 64, 228, 64, 260]];
+    let logs = ['../../../img/map/objects/logs/', 2, [1, 4], [0, 133, 32, 228]];
+    let pointers = ['../../../img/map/objects/pointers/', 3, [1, 3, 7], []];
+    let stones = ['../../../img/map/objects/stones/', 0, [], []];
+    let trees = ['../../../img/map/objects/trees/', 1, [3], [160, 142]];
+    let willows = ['../../../img/map/objects/willows/', 1, [3], [384, 30]];
 
-    let backgroundObjArr = [boxes, ladders];
+    let backgroundObjArr = [trees, willows, logs, boxes, ladders, pointers];
 
     return backgroundObjArr;
 }
