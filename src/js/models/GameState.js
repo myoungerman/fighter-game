@@ -11,11 +11,11 @@ function loadMap() {
           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
           0, 0, 0, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-          33, 33, 34, 0, 0, 0, 0, 0, 32, 34, 0, 0, 0, 0, 0, 0, 0, 0,
+          33, 33, 34, 0, 0, 0, 0, 0, 32, 33, 34, 0, 0, 0, 0, 0, 0, 0,
           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 60, 2, 2,
           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 12, 12, 12, 12,
           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 12, 12, 12, 12,
-          20, 10, 3, 0, 0, 47, 2, 2, 20, 3, 0, 0, 0, 16, 12, 12, 12, 12
+          20, 10, 3, 0, 0, 47, 2, 2, 20, 2, 3, 0, 0, 16, 12, 12, 12, 12
         ],
         getTile: function(col, row) {
           let tile = this.tiles[row * map.cols + col];
@@ -66,22 +66,32 @@ function loadMap() {
 }
 
 function loadBackgroundObjs() {
-    // decide what background objects should exist on the map. Create an array of these items
-    // Create an object with 4 properties (folder name, item name, x, y)
-    // push each item to an array that we will pass to the draw function
-
-    let boxes = ['../../../img/map/objects/boxes/', 2, [1, 4], [32, 133, 224, 262]]; // img path, amount of this object on the map, images used from that folder, x and y coordinates
+    let boxes = ['boxes/', 2, [1, 4], [32, 133, 224, 262]]; // Img category, instances of this object on the map, image variants used, x and y of each instance
     let bushes = [, [], []];
     let fence = [, [], []];
     let grass = [, [], []];
-    let ladders = ['../../../img/map/objects/ladders/', 3, [3, 2, 1], [64, 196, 64, 228, 64, 260]];
-    let logs = ['../../../img/map/objects/logs/', 2, [1, 4], [0, 133, 32, 228]];
-    let pointers = ['../../../img/map/objects/pointers/', 3, [1, 3, 7], []];
-    let stones = ['../../../img/map/objects/stones/', 0, [], []];
-    let trees = ['../../../img/map/objects/trees/', 1, [3], [160, 142]];
-    let willows = ['../../../img/map/objects/willows/', 1, [3], [384, 30]];
+    let ladders = ['ladders/', 4, [3, 3, 2, 1], [64, 164, 64, 196, 64, 228, 64, 260]];
+    let logs = ['logs/', 2, [1, 4], [0, 133, 32, 228]];
+    let pointers = ['pointers/', 3, [1, 3, 7], []];
+    let stones = ['stones/', 0, [], []];
+    let trees = ['trees/', 1, [3], [160, 142]];
+    let willows = ['willows/', 1, [3], [384, 30]];
 
-    let backgroundObjArr = [trees, willows, logs, boxes, ladders, pointers];
+    let sceneryCategories = [trees, willows, logs, boxes, ladders, pointers];
+    let allSceneryObjs = [];
 
-    return backgroundObjArr;
+    sceneryCategories.forEach((el) => { // Create an object for each piece of scenery
+        let xIndex = 0;
+        let yIndex = 1;
+        for (let i = 0; i < el[1]; i++) {
+            let item = new SceneryObject(`${el[0]}${el[2][i]}`, el[3][xIndex], el[3][yIndex]);
+            xIndex += 2;
+            yIndex += 2; 
+            allSceneryObjs.push(item);
+        }
+    });
+
+    return allSceneryObjs;
 }
+
+import { SceneryObject } from './Classes.js';

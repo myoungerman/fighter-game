@@ -42,24 +42,15 @@ function drawMap(map) {
 }
 
 function drawBackgroundObjs(objArr) {
-  // Each el of objArr is something like: ['../../../img/map/objects/boxes/', 2, [1, 4], [32, 132, 224, 228]]
-  // img path, amount of this object on the map, images used from that folder, x and y coordinates
-  objArr.forEach((el) => {
-    let xIndex = 0;
-    let yIndex = 1;
-    // for the length of [1], draw using [3] for img srcs and [4] for the coordinates
-    for (let i = 0; i < el[1]; i++) {
-      let img = new Image();
-      img.src = `${el[0]}${el[2][i]}.png`;
-      img.addEventListener('load', () => {
-        ctx.drawImage(
-          img,
-          el[3][xIndex],
-          el[3][yIndex]
-        );
-        xIndex += 2;
-        yIndex += 2;  
-      });
-    }
+  objArr.forEach((el) => { // el is a scenery object
+    let img = new Image();
+    img.src = el.imgPath;
+    img.addEventListener('load', () => {
+      ctx.drawImage(
+        img,
+        el.location[0],
+        el.location[1]
+      ); 
+    });
   });
 }

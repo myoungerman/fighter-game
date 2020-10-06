@@ -2,7 +2,6 @@ class GameObject {
     constructor (canCollide, canMove, width, height) {
         this.canCollide = canCollide;
         this.canMove = canMove;
-        this.img = '';
         this.initialX = 0;
         this.initialY = 0;
         this.width = width;
@@ -21,4 +20,11 @@ class Character extends GameObject {
         this.location = [initialX, initialY];
     }
 }
-export { Character, GameObject };
+
+class SceneryObject {
+    constructor(img, objX, objY){
+        this.imgPath = `../../../img/map/objects/${img}.png`;
+        this.location = [objX, objY];
+    }
+}
+export { Character, GameObject, SceneryObject };
