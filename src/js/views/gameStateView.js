@@ -48,8 +48,8 @@ function drawBackgroundObjs(objArr) {
     img.addEventListener('load', () => {
       ctx.drawImage(
         img,
-        el.location[0],
-        el.location[1]
+        el.x,
+        el.y
       ); 
     });
   });

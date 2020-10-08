@@ -1,4 +1,4 @@
-export { detectTileLocation };
+export { detectTileLocation, detectLadderTileOverlap };
 import { GameObject } from './Classes.js';
 
 function detectTileLocation(map) {
@@ -21,9 +21,31 @@ function detectTileLocation(map) {
         }
         tileObj.initialX = c * map.tsize; // Target x
         tileObj.initialY = r * map.tsize; // Target y
-        //tileArr.push(tileObj);
         }
       }   
-// return an obj containing 2 arrays, one with the empty tiles and one with the full tiles
+      // return an obj containing 2 arrays, one with the empty tiles and one with the full tiles
       return tileArr;
+}
+
+function detectLadderTileOverlap(scenery, fullTiles) {
+    let ladders = [];
+
+    scenery.forEach((el) => {
+      if (el.imgPath.includes('ladder')) {
+        ladders.push(el); // Store all of the ladder objects
+      }
+    });
+
+    ladders.forEach((el) => {
+      // if the ladder obj x and y fall on or between the tile's x to x + width and y to y + height or vice versa, remove that
+      // tile from tileArr
+      fullTiles.forEach((tile) => {
+        if (el.x >= tile.initialX && el.x <= tile.initialX + tile.width
+            && el.y >= tile.initialY && el.y <= tile.initialY + tile.height) {
+              let index = fullTiles.indexOf(tile);
+              fullTiles.splice(index, 1);
+            }
+      });
+    });
+    return [fullTiles, ladders];
 }

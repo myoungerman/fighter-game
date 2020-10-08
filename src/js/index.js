@@ -3,7 +3,7 @@ import { loadAnimation } from './models/Animation.js';
 import { loadMap, loadBackgroundObjs } from './models/GameState.js';
 import { drawAnimation } from './views/animationView.js';
 import { drawBackground, drawMap, drawBackgroundObjs } from './views/gameStateView.js';
-import { detectTileLocation } from './models/Coordinates.js';
+import { detectTileLocation, detectLadderTileOverlap } from './models/Coordinates.js';
 import { detectCollision } from './models/Collision.js';
 
 let player = new Character('woodcutter', 3, 0, 16, 240);
@@ -14,7 +14,7 @@ let playerIdleAnim = [];
 let playerRunAnim = [];
 let playerAttack1Anim = [];
 let playerJumpAnim = [];
-let keysPressed = [];
+let playerClimbAnim = [];
 
 init();
 
@@ -23,9 +23,10 @@ function init() {
     playerRunAnim = loadAnimation('run', player, 6);
     playerAttack1Anim = loadAnimation('attack1', player, 6);
     playerJumpAnim = loadAnimation('jump', player, 6);
+    playerClimbAnim = loadAnimation('climb', player, 6);
 }
 
-let playerAnimArr = [playerIdleAnim, playerRunAnim, playerAttack1Anim, playerJumpAnim];
+let playerAnimArr = [playerIdleAnim, playerRunAnim, playerAttack1Anim, playerJumpAnim, playerClimbAnim];
 let playerAnimToPlay = playerAnimArr[0];
 let counter = 0;
 const MsPerFrame = 33.33; // 33.33 ms per frame is 30 FPS. 1000 ms / FPS = ms per frame.
@@ -36,6 +37,9 @@ let tileArr = detectTileLocation(map);
 drawMap(map);
 let scenery = loadBackgroundObjs();
 drawBackgroundObjs(scenery);
+let updatedArr = detectLadderTileOverlap(scenery, tileArr.fullTiles);
+let fullTiles = updatedArr[0];
+let ladderLocations = updatedArr[1];
 requestAnimationFrame(gameLoop);
 
 async function gameLoop() {
@@ -51,8 +55,9 @@ async function gameLoop() {
         }
     }
 
-    if (playerAnimToPlay === playerAnimArr[1] || playerAnimToPlay === playerAnimArr[3]) { // Player is walking or jumping
-        let collision = detectCollision(player, tileArr.fullTiles);
+    // Player is walking, jumping, or climbing
+    if (playerAnimToPlay === playerAnimArr[1] || playerAnimToPlay === playerAnimArr[3] || playerAnimToPlay === playerAnimArr[4]) {
+        let collision = detectCollision(player, fullTiles);
         if (collision !== true) {
             if (playerAnimToPlay === playerAnimArr[1]) {
                 player.location[0] += 0.66;
@@ -88,12 +93,15 @@ window.addEventListener('keydown', pressAttackKey);
 window.addEventListener('keydown', pressMoveKey);
 window.addEventListener('keydown', pressJumpKey);
 window.addEventListener('keyup', releaseMoveKey);
+window.addEventListener('keydown', pressClimbKey);
+window.addEventListener('keyup', releaseClimbKey);
 
 
 let addKeyUpListener = false;
+let addClimbListener = false;
 
 function pressMoveKey(e) {
-    if (e.code === 'KeyD' && e.code !== 'Space') {
+    if (e.code === 'KeyD') {
         window.removeEventListener('keydown', pressMoveKey); // Register only one keydown event at a time
         playerAnimToPlay = playerAnimArr[1]; // Walk
         if (addKeyUpListener === true) {
@@ -109,7 +117,7 @@ function pressAttackKey(e) {
 }
 
 function releaseMoveKey(e) {
-    if (e.code === 'KeyD' && e.code !== 'Space') {
+    if (e.code === 'KeyD') {
         window.removeEventListener('keyup', pressMoveKey);
         playerAnimToPlay = playerAnimArr[0]; // Idle
         addKeyUpListener = true;
@@ -118,8 +126,26 @@ function releaseMoveKey(e) {
 }
 
 function pressJumpKey(e) {
-    if ((e.code === 'Space' && e.code === 'KeyD') || e.code === 'Space') {
+    if (e.code === 'Space') {
         playerAnimToPlay = playerAnimArr[3];
-        //keyPressed = e.code;
+    }
+}
+
+function pressClimbKey(e) {
+    if (e.code === 'KeyW') {
+        window.removeEventListener('keydown', pressClimbKey); // Register only one keydown event at a time
+        playerAnimToPlay = playerAnimArr[4]; // Climb
+        if (addClimbListener === true) {
+            window.addEventListener('keyup', releaseClimbKey);
+        }
+    }
+}
+
+function releaseClimbKey(e) {
+    if (e.code === 'KeyW') {
+        window.removeEventListener('keyup', pressClimbKey);
+        playerAnimToPlay = playerAnimArr[0]; // Idle
+        addKeyUpListener = true;
+        window.addEventListener('keydown', pressClimbKey);
     }
 }

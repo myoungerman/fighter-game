@@ -24,7 +24,8 @@ class Character extends GameObject {
 class SceneryObject {
     constructor(img, objX, objY){
         this.imgPath = `../../../img/map/objects/${img}.png`;
-        this.location = [objX, objY];
+        this.x = objX;
+        this.y = objY;
     }
 }
 export { Character, GameObject, SceneryObject };

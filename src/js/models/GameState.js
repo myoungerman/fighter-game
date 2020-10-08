@@ -66,11 +66,15 @@ function loadMap() {
 }
 
 function loadBackgroundObjs() {
-    let boxes = ['boxes/', 2, [1, 4], [32, 133, 224, 262]]; // Img category, instances of this object on the map, image variants used, x and y of each instance
+    /*
+    Array indices represent:
+    Img category, instances of this object on the map, all image variants used, x and y of each instance
+    */
+    let boxes = ['boxes/', 2, [1, 4], [32, 133, 224, 262]]; 
     let bushes = [, [], []];
     let fence = [, [], []];
     let grass = [, [], []];
-    let ladders = ['ladders/', 4, [3, 3, 2, 1], [64, 164, 64, 196, 64, 228, 64, 260]];
+    let ladders = ['ladders/', 4, [3, 3, 2, 1], [65, 162, 65, 194, 65, 226, 65, 258]];
     let logs = ['logs/', 2, [1, 4], [0, 133, 32, 228]];
     let pointers = ['pointers/', 3, [1, 3, 7], []];
     let stones = ['stones/', 0, [], []];
