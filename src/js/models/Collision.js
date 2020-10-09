@@ -13,13 +13,13 @@ empty, the player falls offscreen and dies.
 
 let collision = false;
 
-function detectCollision(rect1, rect2) { // parameters are playerObj and tileArr
+function detectCollision(rect1, rect2) { // parameters are playerObj and array of objects
     collision = false;
     rect2.forEach((el) => {
-            if (rect1.location[0] < el.initialX + el.width &&
-                rect1.location[0] + rect1.width > el.initialX &&
-                rect1.location[1] < el.initialY + el.height &&
-                rect1.location[1] + rect1.height > el.initialY) { // collision detected, handle objects accordingly
+            if (rect1.location[0] < el.x + el.width &&
+                rect1.location[0] + rect1.width > el.x &&
+                rect1.location[1] < el.y + el.height &&
+                rect1.location[1] + rect1.height > el.y) { // collision detected, handle objects accordingly
                     collision = true;
                     return collision;
                 }    

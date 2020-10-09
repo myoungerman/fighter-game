@@ -19,8 +19,8 @@ function detectTileLocation(map) {
             tileObj = new GameObject(false, false, 32, 32); // Cannot collide
             tileArr.emptyTiles.push(tileObj);
         }
-        tileObj.initialX = c * map.tsize; // Target x
-        tileObj.initialY = r * map.tsize; // Target y
+        tileObj.x = c * map.tsize; // Target x
+        tileObj.y = r * map.tsize; // Target y
         }
       }   
       // return an obj containing 2 arrays, one with the empty tiles and one with the full tiles
@@ -40,8 +40,8 @@ function detectLadderTileOverlap(scenery, fullTiles) {
       // if the ladder obj x and y fall on or between the tile's x to x + width and y to y + height or vice versa, remove that
       // tile from tileArr
       fullTiles.forEach((tile) => {
-        if (el.x >= tile.initialX && el.x <= tile.initialX + tile.width
-            && el.y >= tile.initialY && el.y <= tile.initialY + tile.height) {
+        if (el.x >= tile.x && el.x <= tile.x + tile.width
+            && el.y >= tile.y && el.y <= tile.y + tile.height) {
               let index = fullTiles.indexOf(tile);
               fullTiles.splice(index, 1);
             }

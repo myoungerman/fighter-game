@@ -58,6 +58,7 @@ async function gameLoop() {
     // Player is walking, jumping, or climbing
     if (playerAnimToPlay === playerAnimArr[1] || playerAnimToPlay === playerAnimArr[3] || playerAnimToPlay === playerAnimArr[4]) {
         let collision = detectCollision(player, fullTiles);
+        console.log(collision);
         if (collision !== true) {
             if (playerAnimToPlay === playerAnimArr[1]) {
                 player.location[0] += 0.66;
@@ -67,6 +68,13 @@ async function gameLoop() {
                     player.location[0] += 3.86; // Player can jump over gaps 3 tiles wide
                 }
             }
+            if (playerAnimToPlay === playerAnimArr[4] && detectCollision(player, ladderLocations)) {
+                player.location[1] -= 0.66;
+            }
+            if (playerAnimToPlay === playerAnimArr[4] && !detectCollision(player, ladderLocations)) {
+                playerAnimToPlay = playerAnimArr[0];
+            }
+
         }
     }
 
@@ -133,19 +141,25 @@ function pressJumpKey(e) {
 
 function pressClimbKey(e) {
     if (e.code === 'KeyW') {
-        window.removeEventListener('keydown', pressClimbKey); // Register only one keydown event at a time
-        playerAnimToPlay = playerAnimArr[4]; // Climb
-        if (addClimbListener === true) {
-            window.addEventListener('keyup', releaseClimbKey);
+        if (detectCollision(player, ladderLocations)) { // Player is touching a ladder
+            window.removeEventListener('keydown', pressClimbKey); // Register only one keydown event at a time
+            playerAnimToPlay = playerAnimArr[4]; // Climb
+            if (addClimbListener === true) {
+                window.addEventListener('keyup', releaseClimbKey);
+            }    
         }
     }
 }
 
 function releaseClimbKey(e) {
     if (e.code === 'KeyW') {
-        window.removeEventListener('keyup', pressClimbKey);
-        playerAnimToPlay = playerAnimArr[0]; // Idle
-        addKeyUpListener = true;
-        window.addEventListener('keydown', pressClimbKey);
+            window.removeEventListener('keyup', pressClimbKey);
+            if (detectCollision(player, ladderLocations)) {
+                playerAnimToPlay = playerAnimArr[4]; // Loop climb while the player is on the ladder
+            } else {
+                playerAnimToPlay = playerAnimArr[0]; // Idle
+            }
+            addClimbListener = true;
+            window.addEventListener('keydown', pressClimbKey);
     }
 }

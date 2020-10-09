@@ -78,8 +78,8 @@ function loadBackgroundObjs() {
     let logs = ['logs/', 2, [1, 4], [0, 133, 32, 228]];
     let pointers = ['pointers/', 3, [1, 3, 7], []];
     let stones = ['stones/', 0, [], []];
-    let trees = ['trees/', 1, [3], [160, 142]];
-    let willows = ['willows/', 1, [3], [384, 30]];
+    let trees = ['trees/', 1, [3], [176, 138]];
+    let willows = ['willows/', 1, [3], [384, 10]];
 
     let sceneryCategories = [trees, willows, logs, boxes, ladders, pointers];
     let allSceneryObjs = [];
