@@ -10,24 +10,7 @@ let player = new Character('woodcutter', 3, 0, 16, 240);
 player.width = 30;
 player.height = 48;
 
-let playerIdleAnim = [];
-let playerRunAnim = [];
-let playerAttack1Anim = [];
-let playerJumpAnim = [];
-let playerClimbAnim = [];
-
-init();
-
-function init() {
-    playerIdleAnim = loadAnimation('idle', player, 4);
-    playerRunAnim = loadAnimation('run', player, 6);
-    playerAttack1Anim = loadAnimation('attack1', player, 6);
-    playerJumpAnim = loadAnimation('jump', player, 6);
-    playerClimbAnim = loadAnimation('climb', player, 6);
-}
-
-let playerAnimArr = [playerIdleAnim, playerRunAnim, playerAttack1Anim, playerJumpAnim, playerClimbAnim];
-let playerAnimToPlay = playerAnimArr[0];
+let playerAnimToPlay = loadAnimation('idle', player, 4);
 let counter = 0;
 const MsPerFrame = 33.33; // 33.33 ms per frame is 30 FPS. 1000 ms / FPS = ms per frame.
 
@@ -45,34 +28,34 @@ requestAnimationFrame(gameLoop);
 async function gameLoop() {
     let startTime = new Date();
     startTime = startTime.getTime();
-
-    if (playerAnimToPlay === playerAnimArr[2] || playerAnimToPlay === playerAnimArr[3]) { // Player is attacking or jumping
+    
+    if (playerAnimToPlay[0].includes('attack') || playerAnimToPlay[0].includes('jump')) { // Player is attacking or jumping
         counter++;
         if (counter > 30) { // After the entire animation plays, revert to idle
-            playerAnimToPlay = playerAnimArr[0];
+            playerAnimToPlay = loadAnimation('idle', player, 4);
             player.currAction = 'idle';
             counter = 0;
         }
     }
 
     // Player is walking, jumping, or climbing
-    if (playerAnimToPlay === playerAnimArr[1] || playerAnimToPlay === playerAnimArr[3] || playerAnimToPlay === playerAnimArr[4]) {
+    if (playerAnimToPlay[0].includes('run') || playerAnimToPlay[0].includes('jump') || playerAnimToPlay[0].includes('climb')) {
         let collision = detectCollision(player, fullTiles);
-        console.log(collision);
         if (collision !== true) {
-            if (playerAnimToPlay === playerAnimArr[1]) {
-                player.location[0] += 0.66;
+            if (playerAnimToPlay[0].includes('run')) {
+                playerAnimToPlay[0].includes('right') ? player.location[0] += 0.66 : player.location[0] -= 0.66;
             }
-            if (playerAnimToPlay === playerAnimArr[3]) {
+            if (playerAnimToPlay[0].includes('jump')) {
                 if (counter < 24) { // The frame after this is the landing frame of the jump
-                    player.location[0] += 3.86; // Player can jump over gaps 3 tiles wide
+                    playerAnimToPlay[0].includes('right') ? player.location[0] += 3.86 : player.location[0] -= 3.86; // Player can jump over gaps 3 tiles wide
                 }
             }
-            if (playerAnimToPlay === playerAnimArr[4] && detectCollision(player, ladderLocations)) {
+            if (playerAnimToPlay[0].includes('climb') && detectCollision(player, ladderLocations)) {
                 player.location[1] -= 0.66;
             }
-            if (playerAnimToPlay === playerAnimArr[4] && !detectCollision(player, ladderLocations)) {
-                playerAnimToPlay = playerAnimArr[0];
+            if (playerAnimToPlay[0].includes('climb') && !detectCollision(player, ladderLocations)) {
+                player.moving = 'right';
+                playerAnimToPlay = loadAnimation('idle', player, 4);
             }
 
         }
@@ -109,9 +92,10 @@ let addKeyUpListener = false;
 let addClimbListener = false;
 
 function pressMoveKey(e) {
-    if (e.code === 'KeyD') {
+    if ((e.code === 'KeyD') || (e.code === 'KeyA')) {
         window.removeEventListener('keydown', pressMoveKey); // Register only one keydown event at a time
-        playerAnimToPlay = playerAnimArr[1]; // Walk
+        (e.code === 'KeyD') ? player.moving = 'right' : player.moving = 'left';
+        playerAnimToPlay = loadAnimation('run', player, 6); // Walk
         if (addKeyUpListener === true) {
             window.addEventListener('keyup', releaseMoveKey);
         }
@@ -120,14 +104,14 @@ function pressMoveKey(e) {
 
 function pressAttackKey(e) {
     if (e.code === 'KeyF' && (!e.repeat)) {
-        playerAnimToPlay = playerAnimArr[2]; // Attack
+        playerAnimToPlay = loadAnimation('attack1', player, 6); // Attack
     }
 }
 
 function releaseMoveKey(e) {
-    if (e.code === 'KeyD') {
+    if ((e.code === 'KeyD') || (e.code === 'KeyA')) {
         window.removeEventListener('keyup', pressMoveKey);
-        playerAnimToPlay = playerAnimArr[0]; // Idle
+        playerAnimToPlay = loadAnimation('idle', player, 4); // Idle
         addKeyUpListener = true;
         window.addEventListener('keydown', pressMoveKey);
     }
@@ -135,15 +119,16 @@ function releaseMoveKey(e) {
 
 function pressJumpKey(e) {
     if (e.code === 'Space') {
-        playerAnimToPlay = playerAnimArr[3];
+        playerAnimToPlay = loadAnimation('jump', player, 6);
     }
 }
 
 function pressClimbKey(e) {
-    if (e.code === 'KeyW') {
+    if (e.code === 'KeyW' || e.code === 'KeyS') {
         if (detectCollision(player, ladderLocations)) { // Player is touching a ladder
             window.removeEventListener('keydown', pressClimbKey); // Register only one keydown event at a time
-            playerAnimToPlay = playerAnimArr[4]; // Climb
+            (e.code === 'KeyW') ? player.moving = 'up' : player.moving = 'down';
+            playerAnimToPlay = loadAnimation('climb', player, 6); // Climb
             if (addClimbListener === true) {
                 window.addEventListener('keyup', releaseClimbKey);
             }    
@@ -155,9 +140,10 @@ function releaseClimbKey(e) {
     if (e.code === 'KeyW') {
             window.removeEventListener('keyup', pressClimbKey);
             if (detectCollision(player, ladderLocations)) {
-                playerAnimToPlay = playerAnimArr[4]; // Loop climb while the player is on the ladder
+                playerAnimToPlay = loadAnimation('climb', player, 6); // Loop climb while player is on ladder
             } else {
-                playerAnimToPlay = playerAnimArr[0]; // Idle
+                player.moving = 'right';
+                playerAnimToPlay = loadAnimation('idle', player, 4);
             }
             addClimbListener = true;
             window.addEventListener('keydown', pressClimbKey);

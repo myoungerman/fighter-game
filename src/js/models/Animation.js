@@ -1,7 +1,6 @@
 function loadAnimation(action, character, imgNumFrames) {
     let img = new Image();
-    img.src = `../../../img/${character.type}/${character.type}_${action}.png`;
-
+    img.src = `../../../img/${character.type}/${character.type}_${action}_${character.moving}.png`;
     let actionData = [img.src, img.height, 0]; // Will contain img path, height, and the x-coord for each frame of the action.
     let frameWidth = img.width / imgNumFrames;
     let counter = frameWidth;
@@ -10,7 +9,7 @@ function loadAnimation(action, character, imgNumFrames) {
         actionData.push(counter);
         counter += frameWidth;
     }
-    return actionData;
+    return actionData;    
 };
 
 export { loadAnimation };

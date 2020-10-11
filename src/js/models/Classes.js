@@ -15,7 +15,7 @@ class Character extends GameObject {
         this.type = characterType;
         this.health = health;
         this.armor = armor;
-        this.facing = 'right';
+        this.moving = 'right';
         this.currAction = 'idle';
         this.location = [x, y];
     }

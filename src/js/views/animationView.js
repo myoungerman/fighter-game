@@ -28,12 +28,24 @@ function drawAnimation (arr, playerObj) {
     }
 
     if (Number.isInteger(time / animSpeed)) { // Reduce the animation speed
-        if (anim.src.includes('run')) { 
-            ctx.clearRect(playerObj.location[0] - 6.6, playerObj.location[1], arr[3], anim.height); // Erase  where the player just walked           
+        if (anim.src.includes('run')) {
+            if (playerObj.moving === 'right') {
+                ctx.clearRect(playerObj.location[0] - 6.6, playerObj.location[1], arr[3], anim.height); // Erase  where the player just walked           
+            } else {
+                ctx.clearRect(playerObj.location[0] + 6.6, playerObj.location[1], arr[3], anim.height);          
+            }
         } else if (anim.src.includes('jump')) {
-            ctx.clearRect(playerObj.location[0] - 19.3, playerObj.location[1], arr[3], anim.height); // 19.3 is the result of 3.86 px movement per gameLoop * 5 (how often a new frame is drawn)  
+            if (playerObj.moving === 'right') {
+                ctx.clearRect(playerObj.location[0] - 19.3, playerObj.location[1], arr[3], anim.height); // 19.3 is the result of 3.86 px movement per gameLoop * 5 (how often a new frame is drawn)  
+            } else {
+                ctx.clearRect(playerObj.location[0] + 19.3, playerObj.location[1], arr[3], anim.height); // 19.3 is the result of 3.86 px movement per gameLoop * 5 (how often a new frame is drawn)  
+            }
         } else if (anim.src.includes('climb')) {
-            ctx.clearRect(playerObj.location[0], playerObj.location[1] + 6.6, arr[3], anim.height); 
+            if (playerObj.moving === 'up') {
+                ctx.clearRect(playerObj.location[0], playerObj.location[1] + 6.6, arr[3], anim.height); 
+            } else {
+                ctx.clearRect(playerObj.location[0], playerObj.location[1] - 6.6, arr[3], anim.height); 
+            }
         } else {
             ctx.clearRect(playerObj.location[0], playerObj.location[1], arr[3], anim.height); // Erase the frame where the player is currently idling
         }
