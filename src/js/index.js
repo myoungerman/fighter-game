@@ -1,5 +1,5 @@
 import { Character, GameObject } from './models/Classes.js';
-import { loadAnimation } from './models/Animation.js';
+import { loadAnimation, loadSrcImages } from './models/Animation.js';
 import { loadMap, loadBackgroundObjs } from './models/GameState.js';
 import { drawAnimation } from './views/animationView.js';
 import { drawBackground, drawMap, drawBackgroundObjs } from './views/gameStateView.js';
@@ -23,12 +23,13 @@ drawBackgroundObjs(scenery);
 let updatedArr = detectLadderTileOverlap(scenery, tileArr.fullTiles);
 let fullTiles = updatedArr[0];
 let ladderLocations = updatedArr[1];
+loadSrcImages(player, ['idle', 'attack1', 'run', 'jump', 'climb']);
 requestAnimationFrame(gameLoop);
 
 async function gameLoop() {
     let startTime = new Date();
     startTime = startTime.getTime();
-    
+
     if (playerAnimToPlay[0].includes('attack') || playerAnimToPlay[0].includes('jump')) { // Player is attacking or jumping
         counter++;
         if (counter > 30) { // After the entire animation plays, revert to idle
@@ -51,7 +52,7 @@ async function gameLoop() {
                 }
             }
             if (playerAnimToPlay[0].includes('climb') && detectCollision(player, ladderLocations)) {
-                player.location[1] -= 0.66;
+                playerAnimToPlay[0].includes('up') ? player.location[1] -= 0.66 : player.location[1] += 0.66;
             }
             if (playerAnimToPlay[0].includes('climb') && !detectCollision(player, ladderLocations)) {
                 player.moving = 'right';

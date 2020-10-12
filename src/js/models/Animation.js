@@ -12,4 +12,32 @@ function loadAnimation(action, character, imgNumFrames) {
     return actionData;    
 };
 
-export { loadAnimation };
+async function loadSrcImages(character, arr) {
+    // for each el (an anim) in arr, create a new image obj. Await until all images have loaded, then return an array of img objects
+    let imgObjs = [];
+    let leftRight = ['left', 'right'];
+    let upDown = ['up', 'down'];
+    let imagesLoaded = 0;
+
+    arr.forEach((action) => { // load either left and right (for all anims except climb) or up and down
+        for (let i = 0; i < 2; i++) {
+            let img = new Image();
+            if (!action.includes('climb')) {
+                img.src = `../../../img/${character.type}/${character.type}_${action}_${leftRight[i]}.png`;
+            } else {
+                img.src = `../../../img/${character.type}/${character.type}_${action}_${upDown[i]}.png`;
+            }
+            img.addEventListener('load', () => {
+                imgObjs.push(img);
+                imagesLoaded++;
+                console.log(`loaded ${imagesLoaded} images out of ${arr.length * 2}`);
+            });
+        }
+    });
+
+    let blocker = await (imagesLoaded === (arr.length * 2));
+    console.log(`all imgs loaded`);
+    return imgObjs;
+}
+
+export { loadAnimation, loadSrcImages };
